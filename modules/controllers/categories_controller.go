@@ -38,8 +38,8 @@ func (ctr *CategoryController) CreateCategory(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(ResponseFailureData("failure", validate.Error()))
 	}
 
-	result := ctr.DBConfig.DB.Create(requestCre.Item)
-	if result.Error != nil {
+	result := ctr.Usecase.CreateCate(*requestCre)
+	if result != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(ResponseFailureData("error", "Server error, please try again."))
 	}
 
