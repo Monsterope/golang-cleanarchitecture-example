@@ -76,6 +76,9 @@ go get github.com/gofiber/contrib/swagger
 ```
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
+```
+go get github.com/swaggo/swag
+```
 - run generate docs (Start, add and fix when coding)
 ```
 swag init -g app/app.go
@@ -84,6 +87,11 @@ swag init -g app/app.go
 ```
 ~/go/bin/swag init -g app/app.go
 ```
+- after ```go run main.go``` in project join to path ```/docs``` example:
+```
+http://localhost:8080/docs
+```
+- Doc: [SwaggerFiber](https://docs.gofiber.io/contrib/swagger)
 - Doc: [DocumentCommentsFormat](https://github.com/swaggo/swag#declarative-comments-format)
 
 ## (Optional) Docker command
