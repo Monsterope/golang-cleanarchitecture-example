@@ -1,0 +1,224 @@
+definitions:
+  controllers.ResponseFailure:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  controllers.ResponseSuccess:
+    properties:
+      data: {}
+      status:
+        type: string
+    type: object
+  controllers.ResponseSuccessLogin:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      status:
+        type: string
+      user:
+        $ref: '#/definitions/responses.SafeCustomer'
+    type: object
+  controllers.ResponseSuccessRefresh:
+    properties:
+      access_token:
+        type: string
+    type: object
+  middlewares.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  requests.CreateUserRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  requests.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  requests.UpdateUserRequest:
+    properties:
+      name:
+        type: string
+      status:
+        type: integer
+    required:
+    - name
+    type: object
+  responses.SafeCustomer:
+    properties:
+      created_at:
+        type: string
+      name:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is example api docs project
+  title: Clean architecture GO
+  version: "1.0"
+paths:
+  /api/cust/user:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ResponseSuccess'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+      security:
+      - BearerAuth: []
+      summary: Get users info
+      tags:
+      - Auth
+  /api/cust/user/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User Data
+        in: body
+        name: user
+        schema:
+          $ref: '#/definitions/requests.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+      security:
+      - BearerAuth: []
+      summary: Update user info
+      tags:
+      - Auth
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ResponseSuccessLogin'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+      summary: Login
+      tags:
+      - Auth
+  /api/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/middlewares.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ResponseSuccessRefresh'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+      security:
+      - BearerAuth: []
+      summary: Refresh token
+      tags:
+      - Auth
+  /api/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Register Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ResponseFailure'
+      summary: Register
+      tags:
+      - Auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

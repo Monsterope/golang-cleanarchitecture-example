@@ -68,6 +68,24 @@ go get golang.org/x/crypto/bcrypt
 go get github.com/spf13/viper
 ```
 
+## (Optional) Swagger Api Doc
+- install
+```
+go get github.com/gofiber/contrib/swagger
+```
+```
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+- run generate docs (Start, add and fix when coding)
+```
+swag init -g app/app.go
+```
+- OR (Mac/Linux)(When cannot run swag comamnd not found)
+```
+~/go/bin/swag init -g app/app.go
+```
+- Doc: [DocumentCommentsFormat](https://github.com/swaggo/swag#declarative-comments-format)
+
 ## (Optional) Docker command
 
 - MYSQL

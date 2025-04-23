@@ -29,6 +29,14 @@ func NewUserController(uc usecases.UserUsecaseInterface, db *databases.DatabaseC
 	}
 }
 
+// @Summary Login
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user body requests.LoginRequest true "Login Data"
+// @Success 200 {object} controllers.ResponseSuccessLogin
+// @Failure 400 {object} controllers.ResponseFailure
+// @Router /api/login [post]
 func (ctr *UserController) Login(c *fiber.Ctx) error {
 	requestUser := new(requests.LoginRequest)
 	if err := c.BodyParser(requestUser); err != nil {
@@ -53,6 +61,15 @@ func (ctr *UserController) Login(c *fiber.Ctx) error {
 	return c.JSON(responseData)
 }
 
+// @Summary Refresh token
+// @Tags Auth
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param user body middlewares.RefreshTokenRequest true "Refresh token"
+// @Success 200 {object} controllers.ResponseSuccessRefresh
+// @Failure 400 {object} controllers.ResponseFailure
+// @Router /api/refresh [post]
 func (ctr *UserController) RefreshToken(c *fiber.Ctx) error {
 
 	reqToken := new(middlewares.RefreshTokenRequest)
@@ -71,6 +88,14 @@ func (ctr *UserController) RefreshToken(c *fiber.Ctx) error {
 
 }
 
+// @Summary Register
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user body requests.CreateUserRequest true "Register Data"
+// @Success 200 {object} controllers.ResponseSuccess
+// @Failure 400 {object} controllers.ResponseFailure
+// @Router /api/register [post]
 func (ctr *UserController) Register(c *fiber.Ctx) error {
 	requestRegister := new(requests.CreateUserRequest)
 
@@ -89,6 +114,13 @@ func (ctr *UserController) Register(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(ResponseSuccessData("success", fiber.Map{"message": "created success."}))
 }
 
+// @Summary Get users info
+// @Tags Auth
+// @Security BearerAuth
+// @Success 200 {object} controllers.ResponseSuccess
+// @Failure 401 {object} controllers.ResponseFailure
+// @Failure 404 {object} controllers.ResponseFailure
+// @Router /api/cust/user [get]
 func (ctr *UserController) UserInfo(c *fiber.Ctx) error {
 	claim := middlewares.GetClaim(c)
 	if claim == nil {
@@ -103,6 +135,18 @@ func (ctr *UserController) UserInfo(c *fiber.Ctx) error {
 	return c.JSON(ResponseSuccessData("success", responses.ModelUser(user)))
 }
 
+// @Summary Update user info
+// @Tags Auth
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Param user body requests.UpdateUserRequest false "User Data"
+// @Success 200 {object} controllers.ResponseSuccess
+// @Failure 400 {object} controllers.ResponseFailure
+// @Failure 401 {object} controllers.ResponseFailure
+// @Failure 500 {object} controllers.ResponseFailure
+// @Router /api/cust/user/{id} [put]
 func (ctr *UserController) UpdateUser(c *fiber.Ctx) error {
 	claim := middlewares.GetClaim(c)
 	if claim == nil {

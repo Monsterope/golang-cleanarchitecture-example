@@ -13,6 +13,9 @@ import (
 	"cleanarchitecture-example/pkg/utils"
 	"fmt"
 
+	_ "cleanarchitecture-example/docs"
+
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -32,6 +35,12 @@ func NewApp() *App {
 
 }
 
+// @Title Clean architecture GO
+// @Version 1.0
+// @description This is example api docs project
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func (fiberConApp *App) Start(address string) {
 
 	configs.Load()
@@ -44,6 +53,13 @@ func (fiberConApp *App) Start(address string) {
 		fmt.Println("Failed for connect Redis Auth")
 	}
 	middleware := middlewares.NewMiddlewareAuthRedis(authStoreInstance)
+	cfg := swagger.Config{
+		BasePath: "/",
+		FilePath: "./docs/swagger.json",
+		Path:     "docs",
+		Title:    "Swagger API Docs",
+	}
+	fiberConApp.App.Use(swagger.New(cfg))
 
 	user_repo := repositories.NewUserRepo(dbConfig)
 	user_usecase := usecases.NewUserUsecase(user_repo)
