@@ -23,6 +23,11 @@ cp .env.example .env
 go run main.go
 ```
 
+- (Optional) Migrate database
+```
+go run ./cmd/migrate/main.go
+```
+
 ## (Optional) Learning step tutorial
 - Create folder
 ```
