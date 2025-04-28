@@ -1,13 +1,8 @@
 package app
 
 import (
-	"cleanarchitecture-example/app/routes"
+	"cleanarchitecture-example/app/setups"
 	"cleanarchitecture-example/configs"
-	"cleanarchitecture-example/modules/controllers"
-	repositoriesCate "cleanarchitecture-example/modules/repositories/categories"
-	repositories "cleanarchitecture-example/modules/repositories/users"
-	usecasesCate "cleanarchitecture-example/modules/usecases/categories"
-	usecases "cleanarchitecture-example/modules/usecases/users"
 	"cleanarchitecture-example/pkg/databases"
 	"cleanarchitecture-example/pkg/middlewares"
 	"cleanarchitecture-example/pkg/utils"
@@ -53,6 +48,8 @@ func (fiberConApp *App) Start(address string) {
 		fmt.Println("Failed for connect Redis Auth")
 	}
 	middleware := middlewares.NewMiddlewareAuthRedis(authStoreInstance)
+
+	// Swagger config
 	cfg := swagger.Config{
 		BasePath: "/",
 		FilePath: "./docs/swagger.json",
@@ -61,17 +58,8 @@ func (fiberConApp *App) Start(address string) {
 	}
 	fiberConApp.App.Use(swagger.New(cfg))
 
-	user_repo := repositories.NewUserRepo(dbConfig)
-	user_usecase := usecases.NewUserUsecase(user_repo)
-	user_controller := controllers.NewUserController(user_usecase, dbConfig, authStoreInstance)
-	routeUser := routes.NewUserRoute(fiberConApp.App, user_controller, middleware)
-	routeUser.RouteApi()
-
-	cate_repo := repositoriesCate.NewCategoryRepo(dbConfig)
-	cate_usecase := usecasesCate.NewCategoryUsecase(cate_repo)
-	cate_controller := controllers.NewCategoryController(cate_usecase, dbConfig, authStoreInstance)
-	routeCate := routes.NewCategoryRoute(fiberConApp.App, cate_controller, user_controller, middleware)
-	routeCate.RouteBo()
+	// register route
+	setups.RouteSetup(fiberConApp.App, dbConfig, authStoreInstance, middleware)
 
 	fiberConApp.App.Listen(address)
 }

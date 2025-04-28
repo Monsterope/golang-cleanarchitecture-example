@@ -48,7 +48,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/cust/user/{id}": {
+        "/api/cust/user/{userid}": {
             "put": {
                 "security": [
                     {
@@ -69,7 +69,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userid",
                         "in": "path",
                         "required": true
                     },

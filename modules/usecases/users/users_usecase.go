@@ -30,7 +30,7 @@ func (uc *UserUsecase) FindAccount(reqdata *requests.LoginRequest) (*entities.Us
 		return nil, err
 	}
 	if checkPass := utils.CompareHasPassword(user.Password, reqdata.Password); checkPass != nil {
-		return nil, err
+		return nil, checkPass
 	}
 	return user, nil
 }

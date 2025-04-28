@@ -140,13 +140,13 @@ func (ctr *UserController) UserInfo(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param id path int true "User ID"
+// @Param userid path int true "User ID"
 // @Param user body requests.UpdateUserRequest false "User Data"
 // @Success 200 {object} controllers.ResponseSuccess
 // @Failure 400 {object} controllers.ResponseFailure
 // @Failure 401 {object} controllers.ResponseFailure
 // @Failure 500 {object} controllers.ResponseFailure
-// @Router /api/cust/user/{id} [put]
+// @Router /api/cust/user/{userid} [put]
 func (ctr *UserController) UpdateUser(c *fiber.Ctx) error {
 	claim := middlewares.GetClaim(c)
 	if claim == nil {

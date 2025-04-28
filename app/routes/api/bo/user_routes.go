@@ -21,15 +21,14 @@ func NewUserRoute(app *fiber.App, ctr *controllers.UserController, middleware *m
 	}
 }
 
-func (route *UserRoute) RouteApi() {
+func (route *UserRoute) RouteUser() {
 	api := route.App.Group("/api")
 
 	controllers := route.Controllers
-	api.Post("/login", controllers.Login)
-	api.Post("/register", controllers.Register)
-	api.Post("/refresh", controllers.RefreshToken)
-	customer := api.Group("cust", route.Middlewares.AuthIsCustomer)
-	customer.Get("/user", controllers.UserInfo)
-	customer.Put("/user/:userid", controllers.UpdateUser)
+	middleware := route.Middlewares
+	bo := api.Group("bo", middleware.AuthIsAdmin)
+
+	bo.Get("/user", controllers.UserInfo)
+	bo.Put("/user/:userid", controllers.UpdateUser)
 
 }

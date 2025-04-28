@@ -62,6 +62,22 @@ func (ctr *CategoryController) GetCategoryAll(c *fiber.Ctx) error {
 	return c.JSON(ResponseSuccessData("success", categoryResource))
 }
 
+func (ctr *CategoryController) GetCategory(c *fiber.Ctx) error {
+
+	cateIdParam := c.Params("cateid")
+	cateid, err := strconv.ParseInt(cateIdParam, 10, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ResponseFailureData("failure", err.Error()))
+	}
+
+	category, err := ctr.Usecase.GetCate(cateid)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(ResponseFailureData("error", "Server error."))
+	}
+
+	return c.JSON(ResponseSuccessData("success", category))
+}
+
 func (ctr *CategoryController) UpdateCategory(c *fiber.Ctx) error {
 	requestUpd := new(requests.CategoryUpdateRequest)
 	if err := c.BodyParser(requestUpd); err != nil {

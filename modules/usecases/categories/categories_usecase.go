@@ -22,6 +22,15 @@ func (repo CategoryUsecase) GetCateAll() ([]entities.Category, error) {
 	return repo.Repo.FindAll()
 }
 
+func (repo *CategoryUsecase) GetCate(cateid int64) (*entities.Category, error) {
+	category, err := repo.Repo.FindById(cateid)
+	if err != nil {
+		return nil, err
+	}
+
+	return &category, nil
+}
+
 func (repo CategoryUsecase) UpdateCate(cateid int64, reqdata *requests.CategoryUpdateRequest) (*entities.Category, error) {
 	result := repo.Repo.Edit(cateid, reqdata)
 

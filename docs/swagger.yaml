@@ -100,14 +100,14 @@ paths:
       summary: Get users info
       tags:
       - Auth
-  /api/cust/user/{id}:
+  /api/cust/user/{userid}:
     put:
       consumes:
       - application/json
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: userid
         required: true
         type: integer
       - description: User Data
