@@ -120,3 +120,8 @@ docker pull redis
 ```
 docker run --name <currentname> -p 6379:6379 -d redis
 ```
+
+- Redisinsight
+```
+docker run -d --name <currentname> -p 5540:5540 redis/redisinsight:latest
+```
