@@ -1,0 +1,21 @@
+FROM golang:1.24 AS builder
+
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
+
+FROM alpine:latest
+
+# timezone + ca
+RUN apk --no-cache add ca-certificates tzdata && \
+    cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime && \
+    echo "Asia/Bangkok" > /etc/timezone
+
+WORKDIR /root
+
+# copy only binary
+COPY --from=builder /app/main .
+EXPOSE 8080
+
+CMD ["./main"]
