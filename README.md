@@ -125,3 +125,55 @@ docker run --name <currentname> -p 6379:6379 -d redis
 ```
 docker run -d --name <currentname> -p 5540:5540 redis/redisinsight:latest
 ```
+
+### Build and merge .env
+- open file and edit in /configs.go
+```
+//go:embed .env
+var envFile embed.FS
+
+func Load() {
+	content, err := envFile.ReadFile(".env")
+	if err != nil {
+		panic(fmt.Errorf("cannot read embedded env: %w", err))
+	}
+
+	viper.SetConfigType("env")
+	err = viper.ReadConfig(strings.NewReader(string(content)))
+	if err != nil {
+		panic(fmt.Errorf("cannot load env to viper: %w", err))
+	}
+
+	viper.AutomaticEnv()
+}
+
+func GetEnv(name string) string {
+	nameVarEnv := strings.ToUpper(name)
+	nameVarEnv = strings.ReplaceAll(nameVarEnv, ".", "_")
+	return viper.GetString(nameVarEnv)
+}
+```
+- copy .env in path /configs.go
+
+- or run command
+```
+CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o app main.go
+```
+
+## Docker build and push to registry gitlab
+- login
+```
+docker login registry.gitlab.com
+```
+- build
+```
+docker build -t <tag> .
+```
+- push
+```
+docker push <tag>
+```
+- logout (optional)
+```
+docker logout registry.gitlab.com
+```
